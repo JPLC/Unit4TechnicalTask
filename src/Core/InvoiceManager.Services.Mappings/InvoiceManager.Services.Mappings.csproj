@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\InvoiceManager.Domain\InvoiceManager.Domain.csproj" />
+    <ProjectReference Include="..\InvoiceManager.Services.Contracts\InvoiceManager.Services.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>
