@@ -1,6 +1,6 @@
 ﻿using InvoiceManager.Api.Configuration;
 using InvoiceManager.Services.Abstractions;
-using InvoiceManager.Services.Contracts;
+using InvoiceManager.Services.Contracts.Invoices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -15,10 +15,18 @@ namespace InvoiceManager.Api.Controllers
     public class InvoicesController : BaseController
     {
         private readonly IInvoiceService _invoiceService;
-
-        public InvoicesController(IInvoiceService invoiceService)
+        private readonly IExchangeRateService _exchangeRateService;
+        public InvoicesController(IInvoiceService invoiceService, IExchangeRateService exchangeRateService)
         {
             _invoiceService = invoiceService;
+            _exchangeRateService = exchangeRateService;
+        }
+
+        [HttpGet("exchangeRates")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GetExchangeRate(string currency)
+        {
+            return Resolve(_exchangeRateService.ImportRates(currency));
         }
 
         [HttpGet("Invoices")]

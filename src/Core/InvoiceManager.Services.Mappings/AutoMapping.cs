@@ -1,5 +1,5 @@
 ﻿using InvoiceManager.Domain.Entities;
-using InvoiceManager.Services.Contracts;
+using InvoiceManager.Services.Contracts.Invoices;
 
 namespace InvoiceManager.Services.Mappings
 {

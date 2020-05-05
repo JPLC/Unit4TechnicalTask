@@ -1,11 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-
-namespace InvoiceManager.Services.Contracts
+namespace InvoiceManager.Services.Contracts.Invoices
 {
-    public class InvoiceCreate
+    public class InvoiceUpdate
     {
+        public Guid InvoiceId { get; set; }
+
         [MaxLength(100)]
         public string Supplier { get; set; }
 

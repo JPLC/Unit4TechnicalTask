@@ -17,6 +17,9 @@ namespace InvoiceManager.Api.Configuration
 
             ////services
             services.AddScoped<IInvoiceService, InvoiceService>();
+            services.AddScoped<IExchangeRateService>(x => new ExchangeRateService(
+                configuration.GetValue<string>("ExchangeApi:Url"), configuration.GetValue<string>("ExchangeApi:Key")));
+
             services.AddTransient(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 
             // building dependencies

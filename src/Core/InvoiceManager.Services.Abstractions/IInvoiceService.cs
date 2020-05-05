@@ -1,4 +1,4 @@
-﻿using InvoiceManager.Services.Contracts;
+﻿using InvoiceManager.Services.Contracts.Invoices;
 using System;
 using System.Collections.Generic;
 using System.Threading;

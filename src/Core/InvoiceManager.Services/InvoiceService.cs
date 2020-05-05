@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using InvoiceManager.Domain.Entities;
 using InvoiceManager.Services.Abstractions;
-using InvoiceManager.Services.Contracts;
+using InvoiceManager.Services.Contracts.ExchangeRate;
+using InvoiceManager.Services.Contracts.Invoices;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -15,27 +16,50 @@ namespace InvoiceManager.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IExchangeRateService _exchangeRateService;
 
-
-        public InvoiceService(IUnitOfWork unitOfWork, IMapper mapper)
+        public InvoiceService(IUnitOfWork unitOfWork, IMapper mapper, IExchangeRateService exchangeRateService)
         {
             _unitOfWork = unitOfWork;
             _unitOfWork.SetLazyLoading(false);
             _mapper = mapper;
+            _exchangeRateService = exchangeRateService;
         }
 
         public async Task<OperationResult<IEnumerable<InvoiceDetails>>> GetAllInvoices(string currency, CancellationToken cancellationToken)
         {
             var dbData = _unitOfWork.GetRepository<Invoice>().FindAll();
-            return new OperationResult<IEnumerable<InvoiceDetails>>(_mapper.Map<IEnumerable<Invoice>, IEnumerable<InvoiceDetails>>(dbData));
+            var rets = _mapper.Map<IEnumerable<Invoice>, IEnumerable<InvoiceDetails>>(dbData);
+            if (!string.IsNullOrEmpty(currency))
+            {
+                var rates = _exchangeRateService.ImportRates(currency);
+                foreach (var ret in rets)
+                {
+                    DefineRates(ret, rates, currency);
+                }
+            }
+            return new OperationResult<IEnumerable<InvoiceDetails>>(rets);
         }
 
         public async Task<OperationResult<InvoiceDetails>> GetInvoiceById(Guid id, string currency, CancellationToken cancellationToken)
         {
             var result = _unitOfWork.GetRepository<Invoice>().Find(f => f.InvoiceId == id);
-            return result == null ?
-                new OperationResult<InvoiceDetails> { NotFound = true } :
-                new OperationResult<InvoiceDetails>(_mapper.Map<Invoice, InvoiceDetails>(result));
+            if (result == null)
+                return new OperationResult<InvoiceDetails> { NotFound = true };
+            var ret = _mapper.Map<Invoice, InvoiceDetails>(result);
+            if (!string.IsNullOrEmpty(currency))
+            {
+                var rates = _exchangeRateService.ImportRates(currency);
+                DefineRates(ret, rates, currency);
+            }
+            return new OperationResult<InvoiceDetails>(ret);
+        }
+
+        private void DefineRates(InvoiceDetails ret, OperationResult<ExchangeRateResult> rates, string currency)
+        {
+            var rate = rates.Entity.ConversionRates[ret.Currency.ToUpperInvariant()];
+            ret.Amount *= (decimal)rate;
+            ret.Currency = currency.ToUpperInvariant();
         }
 
         public async Task<OperationResult<InvoiceDetails>> AddInvoice(InvoiceCreate invoiceToCreate, CancellationToken cancellationToken)

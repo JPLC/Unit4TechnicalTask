@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Toolkits\Toolkit.Services\Toolkit.Services.csproj" />
     <ProjectReference Include="..\..\Toolkits\Toolkit.UoW\Toolkit.UoW.csproj" />
     <ProjectReference Include="..\InvoiceManager.Domain\InvoiceManager.Domain.csproj" />
