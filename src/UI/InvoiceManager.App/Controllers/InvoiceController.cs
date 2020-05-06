@@ -27,11 +27,8 @@ namespace InvoiceManager.App.Controllers
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null) return NotFound();
-
             var result = await _invoiceManagerApi.GetInvoiceById(id.Value, null, new CancellationToken());
-
             if (result == null) return NotFound();
-
             return View(result.Entity);
         }
 
@@ -44,27 +41,20 @@ namespace InvoiceManager.App.Controllers
         // POST: Invoice/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("InvoiceId,Supplier,DateIssued,Currency,Amount,Description")] InvoiceCreateVM invoiceCreateVM)
+        public async Task<IActionResult> Create([Bind("Supplier,DateIssued,Currency,Amount,Description")] InvoiceCreateVM invoiceCreateVM)
         {
-            if (ModelState.IsValid)
-            {
-                var result = await _invoiceManagerApi.AddInvoice(invoiceCreateVM, new CancellationToken());
-                if (result.Success)
-                    return RedirectToAction(nameof(Index));
-                return View(invoiceCreateVM);
-            }
-            return View(invoiceCreateVM);
+            if (!ModelState.IsValid) return View(invoiceCreateVM);
+            var result = await _invoiceManagerApi.AddInvoice(invoiceCreateVM, new CancellationToken());
+            if (!result.Success) return View("InvoiceError");
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Invoice/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null) return NotFound();
-
             var result = await _invoiceManagerApi.GetInvoiceById(id.Value, null, new CancellationToken());
-
             if (result.NotFound) return NotFound();
-
             return View(new InvoiceUpdateVM
             {
                 Amount = result.Entity.Amount,
@@ -82,25 +72,19 @@ namespace InvoiceManager.App.Controllers
         public async Task<IActionResult> Edit(Guid id, [Bind("InvoiceId,Supplier,DateIssued,Currency,Amount,Description")] InvoiceUpdateVM invoiceUpdateVM)
         {
             if (id != invoiceUpdateVM.InvoiceId) return NotFound();
-            if (ModelState.IsValid)
-            {
-                var result = await _invoiceManagerApi.UpdateInvoice(invoiceUpdateVM, new CancellationToken());
-                if (result.NotFound) return NotFound();
-                if (result.Success) return RedirectToAction(nameof(Index));
-                return View(invoiceUpdateVM);
-            }
-            return View(invoiceUpdateVM);
+            if (!ModelState.IsValid) return View(invoiceUpdateVM);
+            var result = await _invoiceManagerApi.UpdateInvoice(invoiceUpdateVM, new CancellationToken());
+            if (result.NotFound) return NotFound();
+            if (!result.Success) return View("InvoiceError");
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Invoice/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null) return NotFound();
-
             var result = await _invoiceManagerApi.GetInvoiceById(id.Value, null, new CancellationToken());
-
             if (result.NotFound) return NotFound();
-
             return View(result.Entity);
         }
 
@@ -111,7 +95,7 @@ namespace InvoiceManager.App.Controllers
         {
             var result = await _invoiceManagerApi.DeleteInvoice(id, new CancellationToken());
             if (result.NotFound) { return NotFound(); }
-            if (!result.Success) return RedirectToAction(nameof(Delete), id);
+            if (!result.Success) return View("InvoiceError");
             return RedirectToAction(nameof(Index));
         }
     }
