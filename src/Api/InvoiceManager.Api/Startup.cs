@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using InvoiceManager.Api.Config;
 using InvoiceManager.Api.Configuration;
-using InvoiceManager.Api.Configuration.Middlewares;
 using InvoiceManager.Services.Mappings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Toolkit.Api.Middlewares;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace InvoiceManager.Api
@@ -42,7 +42,7 @@ namespace InvoiceManager.Api
             services.ConfigureLog4Net();
 
             services.AddAutoMapper(c => c.AddProfile<AutoMapping>(), typeof(Startup));
-            }
+        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

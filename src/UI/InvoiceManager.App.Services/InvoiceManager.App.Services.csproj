@@ -5,9 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\InvoiceManager.Domain\InvoiceManager.Domain.csproj" />
-    <ProjectReference Include="..\..\Core\InvoiceManager.Services\InvoiceManager.Services.csproj" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Toolkits\Toolkit.Api\Toolkit.Api.csproj" />
+    <ProjectReference Include="..\..\Toolkits\Toolkit.Services\Toolkit.Services.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 using log4net;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace InvoiceManager.Api.Configuration.Middlewares
+namespace Toolkit.Api.Middlewares
 {
     public class APIActionFilter : IActionFilter
     {

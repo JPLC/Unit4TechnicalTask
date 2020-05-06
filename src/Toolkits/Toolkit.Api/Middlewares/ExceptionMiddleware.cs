@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace InvoiceManager.Api.Configuration.Middlewares
+namespace Toolkit.Api.Middlewares
 {
     public class ExceptionMiddleware
     {
