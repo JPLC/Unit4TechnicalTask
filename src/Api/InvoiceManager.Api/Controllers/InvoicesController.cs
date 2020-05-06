@@ -51,12 +51,13 @@ namespace InvoiceManager.Api.Controllers
             return Resolve(await _invoiceService.AddInvoice(invoiceCreate, cancellationToken), HttpStatusCode.Created);
         }
 
-        [HttpPut("Invoices")]
+        [HttpPut("Invoices/{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateInvoice([FromBody] InvoiceUpdate invoiceUpdate, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateInvoice([FromBody] InvoiceUpdate invoiceUpdate, Guid id, CancellationToken cancellationToken)
         {
-            return Resolve(await _invoiceService.UpdateInvoice(invoiceUpdate, cancellationToken), HttpStatusCode.Created);
+            return id != invoiceUpdate.InvoiceId ? NotFound($"The Id '{id}' passed by parameter is different from the Id '{invoiceUpdate.InvoiceId}' on request body")
+                : Resolve(await _invoiceService.UpdateInvoice(invoiceUpdate, cancellationToken), HttpStatusCode.Created);
         }
 
         [HttpDelete("Invoices/{id}")]

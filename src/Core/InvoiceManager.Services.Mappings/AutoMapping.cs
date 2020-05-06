@@ -9,8 +9,10 @@ namespace InvoiceManager.Services.Mappings
         public AutoMapping()
         {
             CreateMap<Invoice, InvoiceDetails>().ReverseMap();
-            CreateMap<InvoiceCreate, Invoice>();
-            CreateMap<InvoiceUpdate, Invoice>();
+            CreateMap<InvoiceCreate, Invoice>()
+                .ForMember(t => t.Currency, x => x.MapFrom(t => t.Currency.ToUpperInvariant()));
+            CreateMap<InvoiceUpdate, Invoice>()
+                .ForMember(t => t.Currency, x => x.MapFrom(t => t.Currency.ToUpperInvariant()));
         }
     }
 }

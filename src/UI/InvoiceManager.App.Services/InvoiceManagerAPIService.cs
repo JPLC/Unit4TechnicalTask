@@ -43,7 +43,7 @@ namespace InvoiceManager.App.Services
 
         public async Task<OperationResult<InvoiceDetailsVM>> UpdateInvoice(InvoiceUpdateVM invoice, CancellationToken cancellationToken)
         {
-            var requestUrl = $"{_url}";
+            var requestUrl = $"{_url}{invoice.InvoiceId}";
             var result = await _apiClient.PutAsync<InvoiceUpdateVM, OperationResult<InvoiceDetailsVM>>(requestUrl, invoice);
             return result;
         }
