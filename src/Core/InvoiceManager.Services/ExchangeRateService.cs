@@ -33,7 +33,7 @@ namespace InvoiceManager.Services
                         return result;
                     }
 
-                    result.Entity = ConvertToExangeRateResult(test);
+                    result.Entity = ConvertToExchangeRateResult(test);
                 }
             }
             catch (Exception)
@@ -43,7 +43,7 @@ namespace InvoiceManager.Services
             return result;
         }
 
-        private ExchangeRateResult ConvertToExangeRateResult(ExchangeRate excRate)
+        private ExchangeRateResult ConvertToExchangeRateResult(ExchangeRate excRate)
         {
             var result = new ExchangeRateResult
             {

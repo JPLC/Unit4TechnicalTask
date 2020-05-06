@@ -55,13 +55,6 @@ namespace InvoiceManager.Services
             return new OperationResult<InvoiceDetails>(ret);
         }
 
-        private void DefineRates(InvoiceDetails ret, OperationResult<ExchangeRateResult> rates, string currency)
-        {
-            var rate = rates.Entity.ConversionRates[ret.Currency.ToUpperInvariant()];
-            ret.Amount *= (decimal)rate;
-            ret.Currency = currency.ToUpperInvariant();
-        }
-
         public async Task<OperationResult<InvoiceDetails>> AddInvoice(InvoiceCreate invoiceToCreate, CancellationToken cancellationToken)
         {
             var result = new OperationResult<InvoiceDetails>();
@@ -134,6 +127,13 @@ namespace InvoiceManager.Services
                 throw;
             }
             return result;
+        }
+
+        private void DefineRates(InvoiceDetails ret, OperationResult<ExchangeRateResult> rates, string currency)
+        {
+            var rate = rates.Entity.ConversionRates[ret.Currency.ToUpperInvariant()];
+            ret.Amount /= (decimal)rate;
+            ret.Currency = currency.ToUpperInvariant();
         }
     }
 }
