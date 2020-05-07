@@ -22,13 +22,6 @@ namespace InvoiceManager.Api.Controllers
             _exchangeRateService = exchangeRateService;
         }
 
-        [HttpGet("exchangeRates")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetExchangeRate(string currency)
-        {
-            return Resolve(_exchangeRateService.ImportRates(currency));
-        }
-
         [HttpGet("Invoices")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllInvoices(string currency, CancellationToken cancellationToken)
