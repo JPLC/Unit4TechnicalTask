@@ -1,5 +1,6 @@
 ﻿using InvoiceManager.App.Services;
 using InvoiceManager.App.Services.Abstractions;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -30,9 +31,6 @@ namespace InvoiceManager.App
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
             services.AddHttpClient<ApiClient>(client =>
             {
                 client.BaseAddress = new Uri(Configuration.GetValue<string>("InvoiceManagerApiUrl"));
@@ -40,6 +38,25 @@ namespace InvoiceManager.App
             });
 
             services.AddScoped<IInvoiceManagerApiService, InvoiceManagerAPIService>();
+
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
+                .AddFacebook(facebookOptions =>
+                {
+                    facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+                    facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                })
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/auth/login";
+                    options.LogoutPath = "/auth/signOut";
+                });
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,8 +73,12 @@ namespace InvoiceManager.App
             }
 
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
+
             app.UseCookiePolicy();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

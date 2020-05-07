@@ -7,9 +7,11 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InvoiceManager.App.Controllers
 {
+    [Authorize]
     public class InvoiceController : Controller
     {
         private readonly IInvoiceManagerApiService _invoiceManagerApi;

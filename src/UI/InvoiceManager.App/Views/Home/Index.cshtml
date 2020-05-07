@@ -3,11 +3,13 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <h2 class="display-4">To the Invoice Manager Web App</h2>
-    <h3 class="display-4">Go to the List of</h3>
-
-    <div>
-        <a asp-action="Index" asp-controller="Invoice"><h4>Invoices</h4></a>
-    </div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <h1 class="display-4">Welcome</h1>
+        <h2 class="display-4">To the Invoice Manager Web App</h2>
+        <h3 class="display-4">Go to the List of</h3>
+        <div>
+            <a asp-action="Index" asp-controller="Invoice"><h4>Invoices</h4></a>
+        </div>
+    }
 </div>
