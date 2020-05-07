@@ -34,10 +34,10 @@ namespace InvoiceManager.App.Services
             return result;
         }
 
-        public async Task<OperationResult<InvoiceDetailsVM>> AddInvoice(InvoiceCreateVM invoice, CancellationToken cancellationToken)
+        public async Task<OperationResult<InvoiceDetailsVM>> AddInvoice(InvoiceCreateDto invoice, CancellationToken cancellationToken)
         {
             var requestUrl = $"{_url}";
-            var result = await _apiClient.PostAsync<InvoiceCreateVM, OperationResult<InvoiceDetailsVM>>(requestUrl, invoice);
+            var result = await _apiClient.PostAsync<InvoiceCreateDto, OperationResult<InvoiceDetailsVM>>(requestUrl, invoice);
             return result;
         }
 

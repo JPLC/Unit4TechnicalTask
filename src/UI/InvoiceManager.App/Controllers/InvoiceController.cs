@@ -1,7 +1,10 @@
-﻿using InvoiceManager.App.Services.Abstractions;
+﻿using InvoiceManager.App.Models;
+using InvoiceManager.App.Services.Abstractions;
 using InvoiceManager.App.Services.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,11 +20,25 @@ namespace InvoiceManager.App.Controllers
         }
 
         // GET: Invoice
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(InvoicesViewModel vm1)
         {
-            var result = await _invoiceManagerApi.GetAllInvoices(null, new CancellationToken());
-            return View(result.Entity);
+            var currency = !string.IsNullOrEmpty(vm1.SelectedCode) ? vm1.SelectedCode : string.Empty;
+            var result = await _invoiceManagerApi.GetAllInvoices(currency, new CancellationToken());
+            var currencyCodes = ModelUtils.GetCurrencyCodes().Select(a => new SelectListItem()
+            {
+                Text = a.Value,
+                Value = a.Code,
+                Selected = false
+            });
+            var vm = new InvoicesViewModel
+            {
+                Invoices = result.Entity,
+                CurrencyCodes = currencyCodes,
+                SelectedCode = !string.IsNullOrEmpty(vm1.SelectedCode) ? vm1.SelectedCode : string.Empty
+            };
+            return View(vm);
         }
+
 
         // GET: Invoice/Details/5
         public async Task<IActionResult> Details(Guid? id)
@@ -41,10 +58,10 @@ namespace InvoiceManager.App.Controllers
         // POST: Invoice/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Supplier,DateIssued,Currency,Amount,Description")] InvoiceCreateVM invoiceCreateVM)
+        public async Task<IActionResult> Create([Bind("Supplier,DateIssued,Currency,Amount,Description")] InvoiceCreateDto invoiceCreateDto)
         {
-            if (!ModelState.IsValid) return View(invoiceCreateVM);
-            var result = await _invoiceManagerApi.AddInvoice(invoiceCreateVM, new CancellationToken());
+            if (!ModelState.IsValid) return View(invoiceCreateDto);
+            var result = await _invoiceManagerApi.AddInvoice(invoiceCreateDto, new CancellationToken());
             if (!result.Success) return View("InvoiceError");
             return RedirectToAction(nameof(Index));
         }

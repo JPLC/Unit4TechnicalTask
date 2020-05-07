@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace InvoiceManager.App.Services.Models
 {
-    public class InvoiceCreateVM
+    public class InvoiceCreateDto
     {
 
         [MaxLength(100)]

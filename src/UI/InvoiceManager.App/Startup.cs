@@ -1,11 +1,9 @@
 ﻿using InvoiceManager.App.Services;
 using InvoiceManager.App.Services.Abstractions;
-using InvoiceManager.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -34,8 +32,6 @@ namespace InvoiceManager.App
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            services.AddDbContext<InvoiceDbContext>((options => options.UseSqlServer(Configuration.GetConnectionString("Default"))));
 
             services.AddHttpClient<ApiClient>(client =>
             {

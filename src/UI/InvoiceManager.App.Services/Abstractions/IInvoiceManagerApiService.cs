@@ -13,7 +13,7 @@ namespace InvoiceManager.App.Services.Abstractions
 
         Task<OperationResult<InvoiceDetailsVM>> GetInvoiceById(Guid id, string currency, CancellationToken cancellationToken);
 
-        Task<OperationResult<InvoiceDetailsVM>> AddInvoice(InvoiceCreateVM invoice, CancellationToken cancellationToken);
+        Task<OperationResult<InvoiceDetailsVM>> AddInvoice(InvoiceCreateDto invoice, CancellationToken cancellationToken);
 
         Task<OperationResult<InvoiceDetailsVM>> UpdateInvoice(InvoiceUpdateVM invoice, CancellationToken cancellationToken);
 
